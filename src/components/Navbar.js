@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 export function Navbar({ children }) {
   return (
     <nav className="nav-bar">
@@ -6,6 +8,7 @@ export function Navbar({ children }) {
     </nav>
   );
 }
+
 function Logo() {
   return (
     <div className="logo">
@@ -14,7 +17,25 @@ function Logo() {
     </div>
   );
 }
+
 export function Search({ query, setQuery }) {
+  const inputEl = useRef(null);
+
+  useEffect(() => {
+    function callback(e) {
+      if (document.activeElement === inputEl.current) return;
+
+      if (e.code === "Enter") {
+        inputEl.current.focus();
+        setQuery("");
+      }
+    }
+
+    document.addEventListener("keydown", callback);
+
+    return () => document.removeEventListener("keydown", callback);
+  }, [setQuery]);
+
   return (
     <input
       className="search"
@@ -22,6 +43,7 @@ export function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
