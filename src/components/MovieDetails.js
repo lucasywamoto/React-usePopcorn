@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { Loader } from "./Loader";
+import { useKey } from "../hooks/useKey";
 
 const KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -53,19 +54,7 @@ export default function MovieDetails({
     onCloseMovie();
   }
 
-  useEffect(() => {
-    function callback(e) {
-      if (e.code === "Escape") {
-        onCloseMovie();
-        console.log("Escape key pressed");
-      }
-    }
-    document.addEventListener("keydown", callback);
-
-    return () => {
-      document.removeEventListener("keydown", callback);
-    };
-  }, [onCloseMovie]);
+  useKey("Escape", onCloseMovie);
 
   useEffect(() => {
     async function getMovieDetails() {
